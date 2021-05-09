@@ -1,6 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:prueba_flutter_ideati/page/home/home.dart';
+import 'package:prueba_flutter_ideati/page/home/Ui/home.dart';
 import 'package:prueba_flutter_ideati/routes.dart';
 
 void main() {
