@@ -1,27 +1,50 @@
-import 'package:get/get.dart';
-import 'package:prueba_flutter_ideati/model/icanhazdadjokeModel.dart';
-import 'package:prueba_flutter_ideati/utils/abstractApi.dart';
-import '../model/accountModel.dart';
+import 'package:get/state_manager.dart';
+import 'package:prueba_flutter_ideati/model/accountModel.dart';
+import '../page/home/Api/homeApi.dart';
+import 'package:prueba_flutter_ideati/page/home/Api/homeApi.dart';
 
 class HomeController extends GetxController {
-
-  var listAccountData = [].obs;
+  Rx<List<AccountModel>> listAccountData  = Rx<List<AccountModel>>([]);
   var accountData = null.obs;
 
-  setAccountData(data) => accountData = data;
-
-  Future<IcanhazdadjokeModel> getIcanhazdadjokeData(int index) async {
-    for(int i = 0; i <= index; i++){
-      AbstractApi().readData(urlData: "https://icanhazdadjoke.com/slack").then((dynamic value) {
-        IcanhazdadjokeModel dataJoke = IcanhazdadjokeModel.fromJson(value);
-        AccountModel item = AccountModel(
-            name: dataJoke.attachments[0].fallback,
-            descriptino: dataJoke.attachments[0].fallback,
-            img: "",
-            numberLike: 3
-        );
-        /*listAccountData.v*/
-      });
-    }
+  @override
+  void onInit() {
+    super.onInit();
+    getJokeData(3);
   }
+
+  void getJokeData(int index) async {
+    List<AccountModel> data = await HomeApi().readJokaData(index??3);
+    data.sort((a,b) => a.numberLike.compareTo(b.numberLike));
+    Stream<List<AccountModel>> newData = Stream.value(data);
+    listAccountData.bindStream(newData);
+  }
+
+  addLike(AccountModel account){
+    List<AccountModel> newData = listAccountData.value.map((data) {
+      if(data.name == account.name){
+        data.numberLike = account.numberLike + 1;
+      }
+      return data;
+    }).toList();
+    newData.sort((a,b) => a.numberLike.compareTo(b.numberLike));
+    Stream<List<AccountModel>> streamData = Stream.value(newData);
+    listAccountData.bindStream(streamData);
+  }
+
+  subtractLike(AccountModel account){
+    List<AccountModel> newData = listAccountData.value.map((data) {
+      if(data.name == account.name){
+        data.numberLike = account.numberLike - 1;
+      }
+      return data;
+    }).toList();
+    newData.sort((a,b) => a.numberLike.compareTo(b.numberLike));
+    Stream<List<AccountModel>> streamData = Stream.value(newData);
+    listAccountData.bindStream(streamData);
+  }
+
+
+
+  List<AccountModel> get getAccountData =>  listAccountData.value;
 }

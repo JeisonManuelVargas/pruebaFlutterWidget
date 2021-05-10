@@ -5,8 +5,10 @@ import 'package:prueba_flutter_ideati/page/home/Ui/widget/buttonIcon.dart';
 
 class CardAccount extends StatelessWidget {
   final AccountModel accountData;
+  final Function(AccountModel) addLike;
+  final Function(AccountModel) subtractLike;
 
-  CardAccount({this.accountData});
+  CardAccount({this.accountData, this.addLike, this.subtractLike});
 
   @override
   Widget build(BuildContext context) {
@@ -26,8 +28,13 @@ class CardAccount extends StatelessWidget {
               height: size.height / 10,
               width: size.height / 10,
               margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-              decoration:
-                  BoxDecoration(shape: BoxShape.circle, color: Colors.green),
+              decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.green, image: DecorationImage(
+                image: MemoryImage(accountData.img)
+              )),
+              /*child: Center(
+                child:  accountData.img != null ? Image.memory(accountData.img, fit: BoxFit.cover, height: 10,) : Text(
+                    '...'),
+              )*/
             ),
           ),
           Expanded(
@@ -45,14 +52,16 @@ class CardAccount extends StatelessWidget {
                       child: Row(
                         children: [
                           ButtonIcon(
-                            iconData: Icons.thumb_up,
-                          ),
+                              handledButton: addLike,
+                              iconData: Icons.thumb_up,
+                              accountData: accountData),
                           Container(
                             child: Text("${accountData.numberLike}"),
                           ),
                           ButtonIcon(
-                            iconData: Icons.thumb_down,
-                          ),
+                              handledButton: subtractLike,
+                              iconData: Icons.thumb_down,
+                              accountData: accountData),
                         ],
                       ),
                     )

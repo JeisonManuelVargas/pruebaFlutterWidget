@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 class AccountModel {
   AccountModel({
     this.img,
@@ -6,7 +8,7 @@ class AccountModel {
     this.descriptino,
   });
 
-  String img;
+  Uint8List img;
   String name;
   int numberLike;
   String descriptino;

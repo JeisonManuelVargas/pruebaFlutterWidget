@@ -1,3 +1,4 @@
 {
-  "holaMundo": "hello World"
+  "AppName": "Test Flutter",
+  "messageHome": "If you click on the rating buttons they will change your score and the cards will be sorted"
 }
